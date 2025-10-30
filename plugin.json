@@ -1,0 +1,9 @@
+{
+  "id": "demo_task",
+  "name": "Tarea con progreso (Demo)",
+  "category": "examples",
+  "description": "Ejemplo de tarea larga con thread y barra de progreso.",
+  "entrypoint": "main:crear_interfaz",
+  "requires": [],
+  "enabled": true
+}

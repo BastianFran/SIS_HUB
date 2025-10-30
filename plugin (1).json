@@ -1,0 +1,9 @@
+{
+  "id": "demo_ui",
+  "name": "Interfaz mínima (Demo)",
+  "category": "examples",
+  "description": "Ejemplo de plugin con UI mínima y navegación simple.",
+  "entrypoint": "main:crear_interfaz",
+  "requires": [],
+  "enabled": true
+}

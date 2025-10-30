@@ -1,0 +1,12 @@
+{
+  "id": "excel_concat_demo",
+  "name": "Concatenar Excel (Demo)",
+  "category": "data_tools",
+  "description": "Selecciona dos Excel, concatena con pandas y exporta (XLSX o CSV) con barra de progreso.",
+  "entrypoint": "main:crear_interfaz",
+  "requires": [
+    "pandas",
+    "openpyxl (para .xlsx)"
+  ],
+  "enabled": true
+}
