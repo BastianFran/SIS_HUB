@@ -6,6 +6,7 @@ Main Tkinter application bootstrap for SIS Hub.
 from __future__ import annotations
 
 import importlib.util
+import re
 import tkinter as tk
 from tkinter import messagebox, ttk
 from pathlib import Path
@@ -245,30 +246,27 @@ def run_app() -> None:
 
     router = Router(content)
 
-    def update_back_button() -> None:
+    def update_nav_state() -> None:
         if router.current() is home:
-            btn_back.state(["disabled"])
+            btn_home.state(["disabled"])
         else:
-            btn_back.state(["!disabled"])
-
-    def go_back() -> None:
-        router.pop()
-        update_back_button()
+            btn_home.state(["!disabled"])
 
     def go_home() -> None:
         router.home()
-        update_back_button()
+        update_nav_state()
 
-    btn_back = ttk.Button(nav, text="Atras", command=go_back, style="Secondary.TButton")
     btn_home = ttk.Button(
         nav, text="Inicio", command=go_home, style="Secondary.TButton"
     )
-    btn_back.pack(side="left", padx=(0, 6))
     btn_home.pack(side="left")
 
-    home = HomeView(content, app_root, logger, router, on_nav_change=update_back_button)
+    home = HomeView(content, app_root, logger, router, on_nav_change=update_nav_state)
     router.push(home)
-    update_back_button()
+    update_nav_state()
+
+    # Escape always returns to Home if a plugin is open.
+    root.bind("<Escape>", lambda _evt: go_home())
 
     root.mainloop()
 
@@ -652,6 +650,9 @@ class HomeView(ttk.Frame):
 
         base = text.split("(", 1)[0].strip()
         token = base.split()[0].strip().lower().replace("-", "_")
+        token = re.split(r"[<>=!~\[]", token, maxsplit=1)[0].strip()
+        if not token:
+            return None
         package_to_module = {
             "pywin32": "win32com",
             "pillow": "PIL",

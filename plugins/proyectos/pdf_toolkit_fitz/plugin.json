@@ -1,0 +1,11 @@
+{
+  "id": "pdf_toolkit_fitz",
+  "name": "Herramienta PDF (PyMuPDF)",
+  "category": "document_tools",
+  "description": "Suite PDF: combinar, dividir, editar, organizar, exportar imagenes, digitalizar y usar plantillas/hotspots con PyMuPDF (fitz).",
+  "entrypoint": "main:crear_interfaz",
+  "requires": [
+    "pymupdf"
+  ],
+  "enabled": true
+}
