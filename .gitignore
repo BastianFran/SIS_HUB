@@ -1,0 +1,24 @@
+# Python cache / bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+.venv-*/
+venv/
+env/
+
+# Build outputs
+build/
+dist/
+*.spec.bak
+
+# Logs and temp files
+*.log
+logs/
+*.tmp
+*.temp
+
+# OS / editor noise
+.DS_Store
+Thumbs.db

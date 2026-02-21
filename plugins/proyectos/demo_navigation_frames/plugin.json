@@ -1,0 +1,9 @@
+{
+  "id": "demo_navigation_frames",
+  "name": "Navegacion interna (Demo)",
+  "category": "examples",
+  "description": "Ejemplo robusto de plugin con varias vistas internas usando frames.",
+  "entrypoint": "main:crear_interfaz",
+  "requires": [],
+  "enabled": true
+}

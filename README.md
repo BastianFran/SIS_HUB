@@ -1,25 +1,30 @@
 # SIS Hub (Soporte Institucional Hub)
 
-Aplicación **Tkinter** para centralizar proyectos (plugins) y ejecutarlos dentro de una sola ventana. Pensada para nuestro entorno corporativo, con ejecución directa en **Python 3.10.9 (Anaconda 2023)** o distribuible como **.exe** (PyInstaller).
+Aplicacion Tkinter para ejecutar proyectos (plugins) dentro de una sola ventana.
+Funciona con Python 3.10 en desarrollo y se puede distribuir como ejecutable
+para usuarios finales.
 
-## Características
-- Navegación simple: Inicio > Categorías > Funciones > Atrás/Inicio.
-- Plugins embebidos: cada mini‑proyecto monta su UI dentro del contenedor del Hub.
-- Contrato de plugin mínimo y estable.
-- Sin dependencias exóticas (stdlib + tkinter).
+---
+
+## Caracteristicas principales
+- Navegacion simple: Inicio > Categorias > Funciones > Atras/Inicio.
+- Plugins desacoplados: cada proyecto monta su UI dentro del contenedor del Hub.
+- Contrato de plugin estable y minimo (plugin.json + funcion crear_interfaz).
+- Sin dependencias externas (stdlib + tkinter).
 
 ---
 
 ## Requisitos
 
-**Usuarios .exe**
-- Windows 10/11. Sin necesidad de Python instalado.
-- Permisos de lectura/escritura en su carpeta de usuario (logs).
-- Si un plugin requiere Outlook/COM u otros, debe estar presente en el equipo (no incluido por defecto).
+**Usuarios del ejecutable (.exe)**
+- Windows 10/11, no requieren Python instalado.
+- Crear previamente `C:\Users\<usuario>\Desktop\sishub_log.txt` (archivo vacio).
+- Descargar la carpeta compartida completa (ejecutable + plugins + assets).
 
-**Usuarios Python (dev)**
-- **Anaconda 2023** con **Python 3.10.9** (o CPython 3.10.9 en Windows).
-- `tkinter` disponible (incluido en CPython para Windows).
+**Desarrolladores (ejecucion directa con Python)**
+- Python 3.10.9 (Anaconda 2023 o CPython 3.10).
+- `tkinter` disponible.
+- Archivo `sishub_log.txt` creado en el Escritorio para capturar los registros.
 
 ---
 
@@ -27,102 +32,105 @@ Aplicación **Tkinter** para centralizar proyectos (plugins) y ejecutarlos dentr
 
 ```
 SIS_Hub/
-├─ main.py
-├─ sis_hub_core/
-│  ├─ app.py                # ventana principal, router, vistas básicas
-│  ├─ router.py             # administración de pila de vistas (push/pop/home)
-│  ├─ catalog.py            # descubrimiento de plugins (plugin.json)
-│  ├─ loader.py             # import dinámico seguro de entrypoints
-│  ├─ logging_utils.py      # logger con rotación en %LOCALAPPDATA%\SISHub\logs
-│  └─ constants.py          # constantes de UI, versión, paths
-├─ plugins/
-│  └─ utilities/
-│     ├─ demo_ui/
-│     │  ├─ plugin.json
-│     │  └─ src/
-│     │     └─ main.py      # crear_interfaz(parent, context)
-│     └─ demo_task/
-│        ├─ plugin.json
-│        └─ src/
-│           └─ main.py      # crear_interfaz(parent, context) con progreso
-├─ assets/
-├─ docs/
-│  └─ CHANGELOG.md
-├─ scripts/
-│  ├─ build_pyinstaller.bat
-│  └─ build.py
-├─ dist/
-└─ logs/
+|-- main.py
+|-- sis_hub_core/
+|   |-- app.py            # ventana principal, router, vistas basicas
+|   |-- router.py         # pila de vistas (push/pop/home)
+|   |-- catalog.py        # descubrimiento de plugins (plugin.json)
+|   |-- loader.py         # import dinamico seguro de entrypoints
+|   |-- logging_utils.py  # logger que escribe en Desktop\sishub_log.txt
+|   `-- constants.py      # constantes de UI, version, paths
+|-- plugins/
+|   `-- <categoria>/<plugin>/plugin.json, src/
+|-- assets/
+|-- docs/
+`-- scripts/
 ```
 
 ---
 
 ## Uso
 
-### Opción A: Ejecutar con Python (Anaconda 2023, Python 3.10.9)
-1. Abrir **Anaconda Prompt** (o terminal con ese Python activo).
-2. Ir a la carpeta del proyecto `SIS_Hub/`.
-3. Ejecutar: `python main.py`
+Antes de ejecutar el Hub verifica que existe `Desktop\sishub_log.txt`. Si falta,
+la aplicacion mostrara un mensaje y se cerrara.
 
-### Opción B: Ejecutable (.exe, PyInstaller)
-- Usar los scripts de `scripts/` para generar una carpeta **onedir** lista para distribuir.
-- Entregar la carpeta `dist/SIS_Hub_x.y.z/` al usuario final. Abrir `SIS_Hub.exe`.
+### Opcion A: ejecutar con Python
+1. Abrir una terminal con el entorno de Python 3.10 activo.
+2. Ubicarse en la carpeta `SIS_Hub/`.
+3. Ejecutar `python main.py`.
+
+### Opcion B: generar ejecutable onefile
+1.Agregar librerías al main.py y probar el import
+2.Abrir anaconda prompt y usar el entorno sishub o donde tengas pyinstaller
+3.cd a la ruta raíz en este caso C:\Users\BBRUNA\OneDrive - Banchile\Soporte Institucionales\Desarrollos\SIS_Hub
+4.pyinstaller main.py --onefile --windowed --clean --name SIS_Hub
+5.Mover el exe de la carpeta dist a la raíz
+#################################################
+1.Agregar librerías al main.py y probar el import
+2.ejecutar build.bat
+#################################################
+---
+
+## Distribucion mediante OneDrive
+- Mantener juntos `SIS_Hub.exe`, `plugins/`, `assets/` y cualquier recurso
+  adicional; el Hub escanea `plugins/` junto al ejecutable en cada arranque.
+- Para actualizar basta con reemplazar archivos dentro de `plugins/`; no es
+  necesario reconstruir el `.exe`.
+- Evitar renombrar la carpeta compartida si existen accesos directos.
+- Confirmar que todos los usuarios tienen permisos de lectura sobre la carpeta.
 
 ---
 
-## Añadir un nuevo plugin
+## Agregar un nuevo plugin
+1. Crear `plugins/<categoria>/<nombre>/plugin.json` y la carpeta `src/`.
+2. `plugin.json` minimo:
+   ```json
+   {
+     "id": "mi_plugin",
+     "name": "Mi Plugin",
+     "category": "utilities",
+     "description": "Descripcion corta.",
+     "entrypoint": "main:crear_interfaz",
+     "requires": [],
+     "enabled": true
+   }
+   ```
+3. En `src/main.py` definir `crear_interfaz(parent, context)`:
+   - Construir los widgets dentro de `parent`.
+   - No crear `Tk()` ni llamar a `mainloop()`.
+   - Para tareas largas usar hilos/subprocesos y `after()` para actualizar UI.
 
-1. Crear una carpeta en `plugins/<categoria>/<nombre>/` con:
-   - `plugin.json` (manifiesto con `id`, `name`, `category`, `entrypoint`, `requires[]` opcional)
-   - `src/main.py` con **`crear_interfaz(parent, context)`** que monta la UI dentro de `parent`.
-
-2. `plugin.json` (ejemplo mínimo):
-```json
-{
-  "id": "mi_plugin",
-  "name": "Mi Plugin",
-  "category": "utilities",
-  "description": "Descripción corta.",
-  "entrypoint": "main:crear_interfaz",
-  "requires": [],
-  "enabled": true
-}
-```
-
-3. `src/main.py` debe **NO** crear `Tk()` ni llamar `mainloop()`. Debe:
-   - construir un `Frame` dentro de `parent`
-   - montar widgets ahí
-   - retornar opcionalmente el `Frame`
-   - si usa tareas largas: ejecutarlas en thread/subprocess y actualizar la UI con `after()`
-   - limpiar timers/hilos en `<Destroy>`
-
-> Ver ejemplos incluidos: `demo_ui` y `demo_task`.
+Los plugins pueden obtener un logger mediante `context.logger()`; los mensajes
+se escriben en `Desktop\sishub_log.txt`.
 
 ---
 
-## Buenas prácticas (PEP8 y robustez)
-- PEP8 y docstrings breves en funciones públicas.
-- Nada de tareas largas en el hilo de UI; usar thread/subprocess y `after()`.
-- Sin rutas absolutas; todo relativo a `__file__` o a la carpeta de datos del usuario: `%LOCALAPPDATA%\SISHub`.
-- Logging con rotación: el Hub ya lo configura; desde el plugin usa `context.logger()`.
-- Evitar dependencias externas: si un plugin las requiere, documentarlas en su `plugin.json` y canalizarlas por TI.
+## Buenas practicas
+- Seguir PEP8 y documentar brevemente las funciones publicas.
+- Mantener las tareas pesadas fuera del hilo principal (usar hilos/after).
+- Evitar rutas absolutas; usar `context.root` o `user_data_dir()` para datos.
+- Registrar la actividad solo a traves de `context.logger()`.
+- Documentar dependencias adicionales en `plugin.json`.
 
 ---
 
-## Empaquetado (PyInstaller)
-- Requiere instalar `pyinstaller` en un entorno de build.
-- Script recomendado: `scripts/build_pyinstaller.bat` (genera *onedir*).
-- Verificar el build en un equipo “limpio” antes de distribuir.
+## Empaquetado y verificacion
+- `scripts/build_pyinstaller.bat` sigue disponible para generar un build onedir
+  durante el desarrollo.
+- Para el build final usar el comando onefile y preparar la carpeta compartida.
+- Probar el paquete en un equipo limpio o usuario distinto antes de publicar.
 
 ---
 
-## Solución de problemas
-- **La app no abre**: use `python main.py` desde consola para ver mensajes; revise `%LOCALAPPDATA%\SISHub\logs\sishub.log`.
-- **Un plugin no carga**: revise su `plugin.json` y la función `crear_interfaz`; errores aparecen en el log.
-- **UI congelada**: verifique que la tarea pesada esté en un thread y use `after()` para actualizar la UI.
-- **Permisos/paths**: no usar rutas de red sin confirmar permisos; preferir `%LOCALAPPDATA%\SISHub`.
+## Solucion de problemas
+- **La app no abre**: ejecutar `python main.py` y revisar `Desktop\sishub_log.txt`.
+- **Plugin no carga**: revisar `plugin.json` y `crear_interfaz`; el error queda en
+  el log.
+- **UI congelada**: asegurate de que la tarea pesada vaya en un hilo/subproceso.
+- **Permisos**: confirmar acceso de lectura a la carpeta compartida y escritura en
+  el Escritorio para el archivo de log.
 
 ---
 
-## Licencia y contacto
-Uso interno. Documentar responsables y área de Soporte Institucional.
+## Licencia
+Uso interno. Documentar responsables y el area de Soporte Institucional.

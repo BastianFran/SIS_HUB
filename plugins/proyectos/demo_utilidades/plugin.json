@@ -1,0 +1,9 @@
+{
+  "id": "demo_utilidades",
+  "name": "Elementos para tkinter",
+  "category": "examples",
+  "description": "Ejemplo de plugin con elementos de tkinter",
+  "entrypoint": "interfaz:crear_interfaz",
+  "requires": [],
+  "enabled": true
+}
