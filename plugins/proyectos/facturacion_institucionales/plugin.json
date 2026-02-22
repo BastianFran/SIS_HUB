@@ -1,0 +1,13 @@
+{
+  "id": "facturacion_institucionales",
+  "name": "Facturacion Institucionales",
+  "category": "operaciones",
+  "description": "Hub de facturacion institucional: busca clientes por RUT desde un maestro, descarga documentos, genera resumenes y ejecuta consultas complementarias.",
+  "entrypoint": "main:crear_interfaz",
+  "requires": [
+    "pandas",
+    "requests",
+    "keyring"
+  ],
+  "enabled": true
+}
