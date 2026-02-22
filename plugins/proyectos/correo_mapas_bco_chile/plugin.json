@@ -1,0 +1,9 @@
+{
+  "id": "correo_mapa_bch",
+  "name": "Mapa BCH - Levantar correos con facturas",
+  "category": "Descargas",
+  "description": "Este proyecto levanta los correos listos apra enviar de las facturas de BCH",
+  "entrypoint": "interfaz:crear_interfaz",
+  "requires": [],
+  "enabled": true
+}

@@ -1,0 +1,13 @@
+{
+  "id": "distribucion_planilla_bch",
+  "name": "Distribucion de Planilla (BCH)",
+  "category": "operaciones",
+  "description": "Distribuye asignaciones en facturas, genera planilla por folio y permite completar hoja facturas desde PDFs BCH.",
+  "entrypoint": "main:crear_interfaz",
+  "requires": [
+    "pandas",
+    "openpyxl",
+    "pymupdf"
+  ],
+  "enabled": true
+}

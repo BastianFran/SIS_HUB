@@ -19,6 +19,15 @@ logs/
 *.tmp
 *.temp
 
+# Local test artifacts (repo root)
+/input.xlsx
+/masivopdf.pdf
+
+# Plugin runtime / local backups
+/plugins/proyectos/correo_mapas_bco_chile/src/download/
+/plugins/proyectos/correo_mapas_bco_chile/src/application/* - copia.py
+/plugins/proyectos/correo_mapas_bco_chile/src/application/* - coold.py
+
 # OS / editor noise
 .DS_Store
 Thumbs.db
